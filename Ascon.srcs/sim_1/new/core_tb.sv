@@ -12,8 +12,9 @@ module core_tb();
     logic term;
     logic a_p;
     logic e_d;
-    logic clk;
+    logic clk = 0;
     logic rst = 1;
+    logic [127:0]out_got;
 
     core #(.NUMR(2))
         c(.out(out), .in(in), .ready(ready),
@@ -26,7 +27,6 @@ module core_tb();
     initial begin
 
         //Encryption
-        clk = 0;
         rst = 0;
         ready_k = 0;
         done = 0;
@@ -35,39 +35,53 @@ module core_tb();
         k_n = 0;
         a_p = 0;
         e_d = 0;
-        #3 rst = 1;
+        #1 rst = 1;
+        @(posedge clk);
 
-        @(posedge clk) #1;
         k_n = 0;
         ready_i = 1;
         in = 128'hff6d25cf734c49a1dd273e4d8f5f5bdb;
-        @(posedge clk) #1;
+        @(posedge clk);
+
         k_n = 1;
+        ready_i = 1;
         in = 128'hff6d25cf734c49a1dd273e4d8f5f5bdb;
-        @(posedge clk) #1;
+        @(posedge clk);
+
         ready_k = 1;
         ready_i = 0;
+        @(posedge clk);
 
-
-        @(posedge clk) #1;
-        wait(ready == 1);
+        //wait(ready == 1);
+        @(posedge ready);
         ready_i = 1;
         a_p = 0;
         in = 128'h6d25cf734c49a1dd273e4d8f5f5bdb01;
-        @(posedge clk) #1;
+        @(posedge clk);
+
+        //wait(ready == 1);
+        @(posedge ready);
+        ready_i = 1;
+        a_p = 1;
+        @(posedge clk);
+
         ready_i = 1;
         in = 128'h6d25cf734c49a1dd273e4d8f5f5bdb01;
-        @(posedge clk) #1;
+        @(posedge clk);
+
         ready_i = 0;
         done = 1;
+        @(posedge clk);
 
+        assert (ready_o == 1);
+        out_got = out;
+        @(posedge clk);
+
+        //wait(ready == 1);
         @(posedge ready);
-        @(posedge clk);
-        ready_i = 1;
-        in = 128'h6d25cf734c49a1dd273e4d8f5f5bac01;
-        @(posedge clk);
         ready_i = 0;
         term = 1;
+        @(posedge clk);
 
         //Decryption
         #5
@@ -82,37 +96,49 @@ module core_tb();
         e_d = 1;
         #5 rst = 1;
 
-        @(posedge clk);
         k_n = 0;
         ready_i = 1;
-        a_p = 0;
         in = 128'hff6d25cf734c49a1dd273e4d8f5f5bdb;
         @(posedge clk);
+
         k_n = 1;
         in = 128'hff6d25cf734c49a1dd273e4d8f5f5bdb;
         @(posedge clk);
+
         ready_k = 1;
         ready_i = 0;
-
-        @(posedge ready);
         @(posedge clk);
+
+        //wait(ready == 1);
+        @(posedge ready);
         ready_i = 1;
-        a_p = 1;
+        a_p = 0;
         in = 128'h6d25cf734c49a1dd273e4d8f5f5bdb01;
         @(posedge clk);
+
+        //wait(ready == 1);
+        @(posedge ready);
         ready_i = 1;
-        in = 128'h3e6d18f72a86a11ebc1138c4ede7a632;
+        a_p = 1;
         @(posedge clk);
+
+        ready_i = 1;
+        in = out_got;
+        @(posedge clk);
+
         ready_i = 0;
         done = 1;
+        @(posedge clk);
 
+        assert(ready_o == 1);
+        assert(out == 128'h6d25cf734c49a1dd273e4d8f5f5bdb01);
+        @(posedge clk);
+
+        //wait(ready == 1);
         @(posedge ready);
-        @(posedge clk);
-        ready_i = 1;
-        in = 128'h92d9b2704bebeb3a641c6c17b4133124;
-        @(posedge clk);
         ready_i = 0;
         term = 1;
+        @(posedge clk);
 
     end
 

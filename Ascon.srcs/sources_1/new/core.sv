@@ -13,15 +13,25 @@ module core #(parameter byte NUMR = 2)
 
     output logic [127:0]out;
     input logic [127:0]in;
+    //Ready to take input
     output logic ready;
+    //Output is ready
     output logic ready_o;
+    //Debugging - State of the System
     output logic [1:0]sys_state;
+    //Indicate input is ready
     input logic ready_i;
+    //Indicate key is ready
     input logic ready_k;
+    //Indicate if it is a key or nonce
     input logic k_n;
+    //Output has been ready
     input logic done;
+    //Terminate
     input logic term;
+    //Input is associate data or plaintext
     input logic a_p;
+    //Encrypt or Decrypt
     input logic e_d;
     input clk, rst;
 
@@ -143,7 +153,7 @@ module core #(parameter byte NUMR = 2)
                     end
                     if (a_p == 1) begin
                         next_s = WAITP_F;
-                        // ready = 1;
+                            // ready = 1;
                     end
                 end
                 else if (term == 1) begin

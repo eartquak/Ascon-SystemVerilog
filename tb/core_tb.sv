@@ -56,7 +56,7 @@ module core_tb();
         @(posedge ready);
         ready_i = 1;
         a_p = 0;
-        in = 128'h6d25cf734c49a1dd273e4d8f5f5bdb01;
+        in = 128'h6d25cf734c49a1dd273e3e4d8f5f5bdb;
         @(posedge clk);
 
         //wait(ready == 1);
@@ -113,7 +113,7 @@ module core_tb();
         @(posedge ready);
         ready_i = 1;
         a_p = 0;
-        in = 128'h6d25cf734c49a1dd273e4d8f5f5bdb01;
+        in = 128'h6d25cf734c49a1dd273e3e4d8f5f5bdb;
         @(posedge clk);
 
         //wait(ready == 1);
